@@ -27,8 +27,6 @@ lxd
 * [shell script to create docker swarm on lxd](https://gist.github.com/LawfulHacker/1f95ba8e1cfb566bb4167019c37ba5bd)
 * [mount filesystems in non-privileged containers](http://blog.forshee.me/2016/02/container-mounts-in-ubuntu-1604.html)
 
-todo: update https://github.com/lxc/lxd/issues/2621 - docker daemon inside lxd (*** add comment about running config! ***)
-
 docker
 ------
 
