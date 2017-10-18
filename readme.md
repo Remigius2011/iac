@@ -32,7 +32,7 @@ tl;dr
 * prepare some [hosts](doc/hosts.md)
 * fork and clone this repo
 * adjust [configuration](doc/configuration.md) (vault + all .yml and .tfvars files)
-* follow the [step-by-step instructions](docs/steps.md)
+* follow the [step-by-step instructions](doc/steps.md)
 * if necessary, consult the [resources](doc/resources.md) or the [cheat sheet](cheatsheet.md)
 * some typical errors are described [here](doc/errors.md)
 
