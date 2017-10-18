@@ -1,0 +1,11 @@
+# manually maintained
+# inventory of lxd hosts
+
+[lxd-hosts]
+
+# todo (mandatory)
+# add a list of hosts IPs and their host names
+# in the following form:
+# <ip> host_name=<name>
+# e.g.:
+# nn.nn.nn.nn host_name=host01

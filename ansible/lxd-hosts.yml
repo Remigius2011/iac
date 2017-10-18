@@ -1,0 +1,20 @@
+# playbook to set up lxd host on metal
+# prerequisites:
+# o ubuntu >= xenial
+# o openssh-server
+# o management user with sudo privileges
+# o static ip
+---
+- hosts: lxd-hosts
+  vars_files:
+  - ../ansible-vault
+  remote_user: "{{ management_user }}"
+  become: yes
+  become_method: sudo
+  roles:
+  - vars
+  - proxy
+  - common
+  - apt-patch
+  - managed-node
+  - lxd-host

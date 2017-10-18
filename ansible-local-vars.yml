@@ -1,0 +1,28 @@
+
+# settings for local (i.e. non-cloud - on premise) environment
+
+# todo
+# configure your proxy URL if applicable, e.g.
+# proxy_url: http://<ip>:<port>/
+
+proxy_url:
+
+apt_proxy: "{{ proxy_url }}"
+http_proxy: "{{ proxy_url }}"
+https_proxy: "{{ proxy_url }}"
+
+# todo
+# configure an ntp host here, e.g.
+# ntp_host: <ip>
+
+ntp_host:
+
+# todo (mandatory)
+# list the hosts and networks from which you want to have ssh access to your hosts here
+# (typically your entire local network and/or the management host), e.g.
+# ssh_src:
+# - <network-ip>/<bits>
+# - <host-ip>/32
+# warning: if you leave this list empty, you won't have any ufw rules that allow inbound ssh access!
+
+ssh_src:

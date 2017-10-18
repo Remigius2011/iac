@@ -1,0 +1,6 @@
+# tasks to install docker from ubuntu package
+---
+# see http://packages.ubuntu.com/xenial-updates/docker.io
+- name: install docker.io package
+  apt:
+    name: docker.io

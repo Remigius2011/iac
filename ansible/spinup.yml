@@ -1,0 +1,11 @@
+# playbook to spin up docker containers, swarm services and stacks
+---
+- hosts: docker-hosts
+  vars_files:
+  - ../ansible-vault
+  remote_user: "{{ management_user }}"
+  become: yes
+  become_method: sudo
+  roles:
+  - vars
+  - spinup

@@ -1,0 +1,29 @@
+
+# variables for the management host
+
+# general environment
+
+var_files:
+- ../ansible-local-vars.yml
+
+# todo
+# if you have a proxy configuration, add all lxd hosts to no_proxy as a comma separated list, e.g.
+# no_proxy: <ip1>,<ip2>
+
+no_proxy:
+
+
+# settings for management host configuration
+
+# todo (mandatory)
+# git user and email
+git_user: <your name>
+git_email: <your email>
+
+# git pull rebase mode (optional - disable to keep the git default setting)
+git_pull_rebase: true
+
+# todo
+# uncomment this if you have an ssh key pair in the directory env/mgt/ssh
+# WARNING: don't forget to encrypt the private key using ansible-vault
+#private_key: ../env/mgt/ssh/id_rsa

@@ -1,0 +1,23 @@
+# this include starts swarm stacks
+---
+- name: get stacks to start on host
+  set_fact:
+    stacks: "{{ swarm_stacks[host_name] }}"
+  when: item.key == host_name
+  with_dict: "{{ swarm_stacks }}"
+
+- name: upload the docker-compose file
+  copy:
+    src: "{{ item.compose }}"
+    dest: "/tmp/{{ item.compose }}"
+    force: yes
+    mode: 0644
+    owner: "{{ maintenance_user }}"
+    group: "{{ maintenance_user }}"
+  with_items: "{{ stacks }}"
+  when: stacks is defined
+
+- name: spin-up stacks
+  shell: "if [ -z \"$(docker stack ls --format {% raw %}\"${{ .Name }}$\"{% end raw %} | grep \"${{ item.name }}$\")\" ]; then docker stack deploy -c /tmp/{{ item.compose }} {{ item.name }}; fi"
+  with_items: "{{ stacks }}"
+  when: stacks is defined

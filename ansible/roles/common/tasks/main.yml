@@ -1,0 +1,47 @@
+# tasks for role common
+---
+- name: add config to /etc/systemd/timesyncd.conf
+# see https://help.ubuntu.com/lts/serverguide/NTP.html
+  lineinfile:
+    dest: /etc/systemd/timesyncd.conf
+    regexp: "^NTP"
+    line: "NTP={{ ntp_host }}"
+  register: timesyncd_conf
+  when: ntp_host is defined
+
+- name: restart timesyncd
+  systemd:
+    name: systemd-timesyncd
+    daemon_reload: yes
+    state: restarted
+  when: timesyncd_conf.changed
+
+- name: install additional packages
+  apt:
+    name: "{{ item }}"
+  with_items: "{{ additional_packages }}"
+
+# see https://www.digitalocean.com/community/tutorials/how-to-setup-additional-entropy-for-cloud-servers-using-haveged
+- block:
+  - name: install haveged to reduce time to get entropy
+    apt:
+      name: haveged
+  - name: add haveged as service
+    shell: update-rc.d haveged defaults
+
+- name: install ufw
+  apt:
+    name: ufw
+
+- name: enable ufw
+  ufw:
+    state: enabled
+    policy: deny
+
+- name: enable incoming ssh from ssh_src
+  ufw:
+    rule: allow
+    src: "{{ item }}"
+    direction: in
+    port: ssh
+  with_items: "{{ ssh_src }}"

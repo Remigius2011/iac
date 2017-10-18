@@ -27,11 +27,16 @@ lxd
 * [shell script to create docker swarm on lxd](https://gist.github.com/LawfulHacker/1f95ba8e1cfb566bb4167019c37ba5bd)
 * [mount filesystems in non-privileged containers](http://blog.forshee.me/2016/02/container-mounts-in-ubuntu-1604.html)
 
+todo: update https://github.com/lxc/lxd/issues/2621 - docker daemon inside lxd (*** add comment about running config! ***)
+
 docker
 ------
 
 * [home](https://www.docker.com/)
 * [install on ubuntu](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/)
+* [docker reference](https://docs.docker.com/reference/)
+* [docker troubleshooting](https://docs.docker.com/engine/admin/)
+* [docker cheat sheet](https://dockercheatsheet.painlessdocker.com/)
 * [docker daemon log](https://stackoverflow.com/questions/30969435/where-is-the-docker-daemon-log)
 * [docker java hello-world by Remigius 2011](https://github.com/Remigius2011/webapp-hello-java)
 * [docker java spring boot hello-world](https://howtodoinjava.com/docker/docker-hello-world-example)
@@ -73,3 +78,4 @@ misc
 * [jq](https://stedolan.github.io/jq/)
 * [jq wiki](https://github.com/stedolan/jq/wiki)
 * [md cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+* [YAML](http://yaml.org/)

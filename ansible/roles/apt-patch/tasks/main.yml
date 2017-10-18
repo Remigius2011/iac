@@ -1,0 +1,10 @@
+# task for patching apt-key in zesty
+---
+- name: adjust apt-key (zesty)
+  lineinfile:
+    dest: "/usr/bin/apt-key"
+    regexp: "S\\.dirmngr"
+    state: present
+    insertafter: "chmod\\s700\\s\\\"\\$GPGHOMEDIR\\\""
+    line: "    if [ -S ~/.gnupg/S.dirmngr ]; then ln ~/.gnupg/S.dirmngr \"${GPGHOMEDIR}\"; fi"
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'zesty'

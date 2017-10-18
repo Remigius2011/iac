@@ -1,0 +1,9 @@
+---
+docker_upstream: yes
+
+# see also https://www.digitalocean.com/community/tutorials/how-to-configure-the-linux-firewall-for-docker-swarm-on-ubuntu-16-04
+docker_ports_tcp: [ 2376, 2377, 7946 ]
+docker_ports_udp: [ 7946, 4789 ]
+
+docker_service_ports:
+- 80

@@ -1,0 +1,30 @@
+# tasks for role lxd-client
+---
+- name: replace lxd hosts as remote to mgmt server
+# lxc remote add host IP --accept-certificate --password=secret
+# note: remotes could also be added in terraform - but the trust password is better handled by ansible vault than by terraform
+  shell: "if [ \"$(lxc remote list | grep {{ item.name }})\" ]; then lxc remote remove {{ item.name }}; fi; lxc remote add {{ item.name }} {{ item.ip }} --accept-certificate --password={{ lxd_trust_password }}"
+  become: no
+  with_items: "{{ lxd_hosts }}"
+
+- name: create initial route script in /etc/network/if-up.d
+  copy:
+    content: "#!/bin/sh\n# created by ansible - don't modify\n"
+    dest: /etc/network/if-up.d/lxd-routes
+    owner: root
+    group: root
+    mode: 0755
+
+- name: add static routes for lxd containers to mgmt host
+# $ sudo vi /etc/network/interfaces
+# -> add this line:
+#   up route add -net 10.205.0.0/24 gw 192.168.1.50 dev eth0
+# $ sudo ifdown eth0 && sudo ifup eth0
+# $ route -n
+  lineinfile:
+    dest: /etc/network/if-up.d/lxd-routes
+    line: "if [ ! \"$(ip route list exact {{ item.net }})\" ]; then route add -net {{ item.net }} gw {{ item.ip }}; fi"
+  with_items: "{{ lxd_hosts }}"
+
+- name: restart networking
+  service: name=networking state=restarted

@@ -1,0 +1,113 @@
+# tasks for role management-host
+---
+- name: create ssh key pair
+  user:
+    name: "{{ management_user }}"
+    comment: "{{ management_user }}"
+    generate_ssh_key: yes
+
+- name: add ppas for ansible and lxd (non zesty)
+  apt_repository:
+    repo: "{{ item }}"
+    update_cache: yes
+  with_items:
+  - "ppa:ansible/ansible"
+  - "ppa:ubuntu-lxc/lxd-stable"
+  when: ansible_distribution != 'Ubuntu' or ansible_distribution_release != 'zesty'
+
+# see also https://www.gnupg.org/documentation/manuals/dirmngr/
+- block:
+  - name: prefetch key from keyserver to start dirmngr daemon (zesty)
+    shell: "gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys {{ prefetch_key }}"
+  - name: add ppas for ansible and lxd (zesty)
+    apt_repository:
+      repo: "{{ item }}"
+      update_cache: yes
+    with_items:
+    - "ppa:ansible/ansible"
+    - "ppa:ubuntu-lxc/lxd-stable"
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'zesty'
+
+- name: apt-get update && apt-get upgrade
+  apt:
+    force_apt_get: true
+    update_cache: yes
+    upgrade: yes
+
+- name: install latest version of software-properties-common, git, ansible, sshpass, lxd-client, jq and unzip
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - software-properties-common
+  - ansible
+  - sshpass
+  - lxd-client
+  - jq
+  - unzip
+
+- name: add management user to lxd group
+  user:
+    name: "{{ management_user }}"
+    append: yes
+    group: lxd
+
+- name: download terraform and special providers and other binaries
+  get_url:
+    url: "{{ item.src }}"
+    dest: /tmp
+    mode: 0755
+  with_items: "{{ download_binaries }}"
+
+- name: install terraform and special providers and other binaries
+  unarchive:
+    src: "/tmp/{{ item.file }}"
+    dest: /usr/local/sbin
+    remote_src: yes
+    mode: 0775
+    owner: root
+    group: root
+  with_items: "{{ download_binaries }}"
+
+- name: remove downloaded archives
+  file:
+    path: "/tmp/{{ item.file }}"
+    state: absent
+  with_items: "{{ download_binaries }}"
+
+- name: create ansible vault password file
+  become: no
+  shell: "echo {{ ansible_vault_password }} > ~/.vaultrc"
+  when: ansible_vault_password is defined
+
+- name: create environment variable for ansible vault password file
+  become: no
+  lineinfile:
+    dest: ~/.bashrc
+    line: export ANSIBLE_VAULT_PASSWORD_FILE=~/.vaultrc
+  when: ansible_vault_password is defined
+
+- name: install ssh key pair
+# see https://stackoverflow.com/questions/29392369/ansible-ssh-private-key-in-source-control
+  block:
+  - name: Ensure .ssh directory exists.
+    file:
+      dest: "/home/{{ management_user }}/.ssh"
+      mode: 0700
+      owner: "{{ management_user }}"
+      state: directory
+  - name: Install ssh private key
+    copy:
+      src: "{{ private_key }}"
+      dest: "/home/{{ management_user }}/.ssh/id_rsa"
+      force: true
+      mode: 0600
+      owner: "{{ management_user }}"
+  - name: Install ssh public key
+    copy:
+      src: "{{ private_key }}.pub"
+      dest: "/home/{{ management_user }}/.ssh/id_rsa.pub"
+      force: true
+      mode: 0644
+      owner: "{{ management_user }}"
+  when: private_key is defined

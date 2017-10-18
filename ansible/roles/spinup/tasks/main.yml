@@ -1,0 +1,13 @@
+# role to spin up docker containers, swarm services and stacks
+---
+- name: spin-up some docker containers
+  include_tasks: containers.yml
+  when: docker_containers is defined
+
+- name: create some services
+  include_tasks: services.yml
+  when: swarm_config is defined and swarm_services is defined
+
+- name: start some stacks
+  include_tasks: stacks.yml
+  when: swarm_config is defined and swarm_stacks is defined

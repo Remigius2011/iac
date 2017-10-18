@@ -1,0 +1,29 @@
+# playbook for initial setup
+# invoke using the following command (don't forget the comma after the host ip):
+#
+# $ ansible-playbook -e 'host_key_checking=false' init.yml -i <host-ip>,
+#
+---
+- hosts: all
+  vars_files:
+  - ../ansible-vault
+  remote_user: "{{ management_user }}"
+  become: yes
+  become_method: sudo
+  gather_facts: no
+  pre_tasks:
+  - name: load additional variables
+    include_vars:
+      file: "{{ item }}"
+    with_items: "{{ var_files }}"
+    when: var_files is defined
+  - name: 'set proxy environment for apt'
+    raw: 'sudo echo "Acquire::http::Proxy \"{{ apt_proxy }}\";" > /etc/apt/apt.conf'
+  - name: 'install python2'
+    raw: sudo apt-get -y install python-simplejson
+  tasks:
+  - name: push management user's ssh public key
+    authorized_key:
+      user: "{{ management_user }}"
+      state: present
+      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

@@ -1,0 +1,89 @@
+
+# variables for digital ocean droplets
+
+# general environment
+
+# todo
+# adjust ntp config for do
+ntp_host: 0.ubuntu.pool.ntp.org
+
+# todo (mandatory)
+# list the public addresses of hosts and networks from which you want to have ssh access to your hosts here
+# (typically your public internet ip address), e.g.
+# ssh_src:
+# - <network-ip>/<bits>
+# - <host-ip>/32
+# warning: if you leave this list empty, you won't have any ufw rules that allow inbound ssh access!
+
+ssh_src:
+
+
+# settings for docker configuration
+
+# parameters for ufw rules for docker communication
+# allow docker internal communications on private IPs
+
+docker_src: "{{ private_ips }}"
+
+# allow access to docker services from anywhere
+
+docker_service_src:
+- any
+
+docker_service_ports:
+- 80
+- 8080:8099
+
+# todo (mandatory)
+# add a map of hosts and their public IP addresses here
+# public_ip_map:
+#   <hostname1>: <ip1>
+#   <hostname2>: <ip2>
+
+public_ip_map:
+
+# todo
+# add a map of swarm parameters here, e.g.
+# swarm_config:
+#  <host1>:
+#    manager: true
+#  <host2>:
+#    manager: true
+#    join: <host1>
+#  <host3>:
+#    join: <host1>
+# which gives a swarm of host1 as first manager, host2 as manager that joins host1 and host3 that joins the swarm as worker.
+# for dedicated managers add dedicated: true to the managers.
+
+swarm_config:
+
+# todo
+# add configuration of some docker containers, e.g.
+#docker_containers:
+#  <host1>: [
+#    { name: c01, parameters: "-p 8080:8080", image: descom/iac-webapp },
+#    { name: c02, parameters: "-p 8081:8080", image: descom/iac-webapp }
+#  ]
+# parameters:
+# name (mandatory): the name of the container
+# parameters (optional): parameters passed 1:1 to docker run
+# image (mandatory): the image from which the container is created
+# see also ansible/roles/spinup/tasks/containers.yml
+
+docker_containers:
+
+# todo
+# add configuration of some swarm services, e.g.
+#swarm_services:
+#  dcch0021: [
+#    { name: s01, parameters: "-p 8082:8080", image: descom/iac-webapp },
+#    { name: s02, replicas: 4, parameters: "-p 8082:8080", image: descom/iac-webapp }
+#  ]
+# parameters:
+# name (mandatory): the name of the container
+# replicas (optional): number of replicas
+# parameters (optional): parameters passed 1:1 to docker service create
+# image (mandatory): the image from which the service is created
+# see also ansible/roles/spinup/tasks/services.yml
+
+swarm_services:

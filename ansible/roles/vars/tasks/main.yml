@@ -1,0 +1,6 @@
+---
+- name: load additional variables
+  include_vars:
+    file: "{{ item }}"
+  with_items: "{{ var_files }}"
+  when: var_files is defined

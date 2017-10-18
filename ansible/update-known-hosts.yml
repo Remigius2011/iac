@@ -1,0 +1,14 @@
+# this playbook updates the ssh keys in ~/.ssh/known_hosts for all hosts in the given inventory
+# the update is performed locally
+---
+- hosts: all
+  gather_facts: no
+  # must be serialized, otherwise ssh-keygen might fail due to ~/.ssh/known_hosts.old being locked - strange but true
+  serial: 1
+  vars_files:
+  - ../ansible-vault
+  roles:
+  - vars
+  tasks:
+  - name: replace ssh key
+    local_action: command /bin/bash -c "if [ -f ~/.ssh/known_hosts && \"$(ssh-keygen -F {{ inventory_hostname }})\" ]; then ssh-keygen -R {{ inventory_hostname }}; fi; ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"

@@ -1,0 +1,46 @@
+# tasks for role swarm - creates one or more swarms
+---
+- name: get swarm config for host
+  set_fact:
+    swh_config: "{{ swarm_config[host_name] }}"
+  when: item.key == host_name
+  with_dict: "{{ swarm_config }}"
+
+- name: set availability parameter for swarm join
+  set_fact:
+    join_availability: "{{' --availability=drain' if swh_config.dedicated is defined and swh_config.dedicated else ''}}"
+  when: swh_config is defined
+
+- name: register initial swarm manager and get join tokens
+  block:
+  - name: swarm init for initial swarm manager and get swarm token
+    shell: "if [ \"$(docker info --format {% raw %}\"{{ .Swarm.LocalNodeState }}\"{% endraw %})\" == \"inactive\" ]; then docker swarm init {{ join_availability }} --advertise-addr {{ private_ip }}; fi"
+  - name: register swarm manager join token
+    shell: docker swarm join-token -q manager
+    register: m_token
+  - name: register swarm worker join token
+    shell: docker swarm join-token -q worker
+    register: w_token
+  - name: set the tokens as fact
+    set_fact:
+      manager_token: "{{ m_token.stdout }}"
+      worker_token: "{{ w_token.stdout }}"
+  when: swh_config is defined and swh_config.manager is defined and swh_config.manager and swh_config.join is undefined
+
+- name: join swarm
+  block:
+  - name: get host variables of join host
+    set_fact:
+      join_host: "{{ hostvars[public_ip_map[swh_config.join]] }}"
+  - name: get some parameters from join host
+    set_fact:
+      join_ip: "{{ join_host.private_ip }}"
+      manager_token: "{{ join_host.manager_token }}"
+      worker_token: "{{ join_host.worker_token }}"
+  - name: swarm join for swarm managers
+    shell: "if [ \"$(docker info --format {% raw %}\"{{ .Swarm.LocalNodeState }}\"{% endraw %})\" == \"inactive\" ]; then docker swarm join {{ join_availability }} --token {{ manager_token }} --advertise-addr {{ private_ip }} {{ join_ip }}:2377; fi"
+    when: swh_config.manager is defined and swh_config.manager
+  - name: swarm join for swarm workers
+    shell: "if [ \"$(docker info --format {% raw %}\"{{ .Swarm.LocalNodeState }}\"{% endraw %})\" == \"inactive\" ]; then docker swarm join --token {{ worker_token }} --advertise-addr {{ private_ip }} {{ join_ip }}:2377; fi"
+    when: not (swh_config.manager is defined and swh_config.manager)
+  when: swh_config is defined and swh_config.join is defined

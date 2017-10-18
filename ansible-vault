@@ -1,0 +1,8 @@
+---
+management_user: <userid>
+ansible_vault_password: <vault-password>
+ansible_ssh_pass: <password>
+ansible_become_pass: <password>
+lxd_trust_password: <some lengthy and secret random value>
+digitalocean_api_token: <api token from your digitalocean account>
+digitalocean_key_fingerprint: <fingerprint of a public key uploaded to digitalocean>

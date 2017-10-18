@@ -1,0 +1,43 @@
+# tasks for role proxy
+---
+- name: set http proxy for apt in /etc/apt/apt.conf
+  lineinfile:
+    dest: /etc/apt/apt.conf
+    regexp: "^Acquire::http::Proxy"
+    line: "Acquire::http::Proxy \"{{ apt_proxy }}\";"
+  when: apt_proxy is defined
+
+- name: set https proxy for apt in /etc/apt/apt.conf
+  lineinfile:
+    dest: /etc/apt/apt.conf
+    regexp: "^Acquire::https::Proxy"
+    line: "Acquire::https::Proxy \"{{ apt_proxy }}\";"
+  when: apt_proxy is defined
+
+- name: set http_proxy in /etc/environment
+  lineinfile:
+    dest: /etc/environment
+    regexp: "^http_proxy"
+    line: "http_proxy=\"{{ http_proxy }}\""
+  when: http_proxy is defined
+
+- name: set https_proxy in /etc/environment
+  lineinfile:
+    dest: /etc/environment
+    regexp: "^https_proxy"
+    line: "https_proxy=\"{{ http_proxy }}\""
+  when: https_proxy is defined
+
+- name: set no_proxy in /etc/environment
+  lineinfile:
+    dest: /etc/environment
+    regexp: "^no_proxy"
+    line: "no_proxy=\"{{ no_proxy }}\""
+  when: no_proxy is defined
+
+- name: disable motd scripts that consume time and then fail due to unavailable proxy
+  shell: "if [ -x \"/etc/update-motd.d/{{ item }}\" ]; then chmod -x \"/etc/update-motd.d/{{ item }}\"; fi"
+  with_items:
+  - 50-motd-news
+  - 91-release-upgrade
+  when: http_proxy is defined

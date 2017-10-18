@@ -1,0 +1,19 @@
+---
+# default trust password - set a real one in ansible-vault
+# you really should not use this!
+lxd_trust_password: "secret"
+
+# key to prefetch to enable apt-key - should be the key of the lxd ppa
+# see https://launchpad.net/~ubuntu-lxc/+archive/ubuntu/lxd-stable
+prefetch_key: 93763AC528C8C52568951BE0D5495F657635B973
+
+# default images to download: xenial and zesty
+lxd_images:
+- name: images:ubuntu/xenial/amd64
+  alias: xenial
+- name: images:ubuntu/zesty/amd64
+  alias: zesty
+
+# network mode: currently bridge and nat are supported
+lxd_network_mode: nat
+#lxd_network_mode: bridge

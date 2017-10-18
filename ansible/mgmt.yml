@@ -1,0 +1,19 @@
+# playbook to set up a management host on a local vm
+# prerequisites:
+# o ubuntu >= xenial
+# o openssh-server
+# o management user with sudo privileges
+---
+- hosts: all
+  vars_files:
+  - ../ansible-vault
+  remote_user: "{{ management_user }}"
+  become: yes
+  become_method: sudo
+  roles:
+  - vars
+  - proxy
+  - common
+  - git
+  - apt-patch
+  - management-host

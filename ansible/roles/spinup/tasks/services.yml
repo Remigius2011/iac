@@ -1,0 +1,12 @@
+# this include creates swarm services
+---
+- name: get services to start on host
+  set_fact:
+    services: "{{ swarm_services[host_name] }}"
+  when: item.key == host_name
+  with_dict: "{{ swarm_services }}"
+
+- name: spin-up services
+  shell: "if [ -z \"$(docker service ls -q -f \"name={{ item.name }}\")\" ]; then docker service create -d --name {{ item.name }} --replicas {{ item.replicas|default(1) }} {{ item.parameters|default(\"\") }} {{ item.image }}; fi"
+  with_items: "{{ services }}"
+  when: services is defined

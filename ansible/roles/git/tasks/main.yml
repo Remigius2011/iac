@@ -1,0 +1,29 @@
+# tasks for role git - install and configure git
+---
+- name: install latest git version
+  apt:
+    name: git
+    state: latest
+
+- name: configure git user and git email
+  become: no
+  shell: "git config --global user.name \"{{ git_user }}\""
+  when: git_user is defined
+
+- name: configure git user and git email
+  become: no
+  shell: "git config --global user.email \"{{ git_email }}\""
+  when: git_email is defined
+
+- name: configure git to rebase on pull
+  become: no
+  shell: "git config --global pull.rebase {{ git_pull_rebase }}"
+  when: git_pull_rebase is defined
+
+- name: clone some repos
+  become: no
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dest }}"
+  with_items: git_repos
+  when: git_repos is defined

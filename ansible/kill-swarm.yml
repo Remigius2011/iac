@@ -1,0 +1,17 @@
+# playbook to kill all swarms (use with caution!!!)
+---
+- hosts: docker-hosts
+  vars_files:
+  - ../ansible-vault
+  remote_user: "{{ management_user }}"
+  become: yes
+  become_method: sudo
+  roles:
+  - vars
+  tasks:
+  - name: pause - leave with ctrl+c followed by a
+    pause:
+      prompt: "if you continue, all swarms will be deleted now. this affects the following nodes:\n  {{ groups['docker-hosts']|join(',') }}"
+  - name: leave --force all swarms !!!
+    shell: docker swarm leave --force
+    ignore_errors: yes

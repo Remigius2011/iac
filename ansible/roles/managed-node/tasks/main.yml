@@ -1,0 +1,13 @@
+# tasks for role managed-node
+---
+- name: forbid ssh password authentication in /etc/ssh/sshd_config
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    validate: 'sshd -f %s -T'
+  with_items:
+  - { regexp: '^PasswordAuthentication ', line: "PasswordAuthentication no" }
+  - { regexp: '^ChallengeResponseAuthentication ', line: "ChallengeResponseAuthentication no" }
+  notify:
+  - restart sshd

@@ -1,0 +1,12 @@
+# manually maintained
+# inventory of hosts with docker directly on bare os - vm/metal
+
+[docker-hosts]
+
+# todo (mandatory)
+# add a list of hosts IPs, their host names and the private IP (this is used for internal docker communications)
+# the private IP may be the same as the public one.
+# in the following form:
+# <ip> host_name=<name> private_ip=<private-ip>
+# e.g.:
+# nn.nn.nn.nn host_name=host01 private_ip=nn.nn.nn.nn

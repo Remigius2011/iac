@@ -1,0 +1,18 @@
+# playbook to set up docker hosts
+# prerequisites:
+# o docker-hosts provisioned (e.g. with terraform or manually on metal) and prepared for ansible
+---
+- hosts: docker-hosts
+  vars_files:
+  - ../ansible-vault
+  remote_user: "{{ management_user }}"
+  become: yes
+  become_method: sudo
+  roles:
+  - vars
+  - proxy
+  - common
+  - apt-patch
+  - managed-node
+  - docker
+  - swarm

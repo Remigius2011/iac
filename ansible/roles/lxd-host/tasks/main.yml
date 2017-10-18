@@ -1,0 +1,93 @@
+# tasks for role lxd-host
+---
+- name: add ppa for lxd (non zesty)
+  apt_repository:
+    repo: "ppa:ubuntu-lxc/lxd-stable"
+    update_cache: yes
+  when: ansible_distribution != 'Ubuntu' or ansible_distribution_release != 'zesty'
+
+# see also https://www.gnupg.org/documentation/manuals/dirmngr/
+- block:
+  - name: prefetch key from keyserver to start dirmngr daemon (zesty)
+    shell: "gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys {{ prefetch_key }}"
+  - name: add ppas for lxd (zesty)
+    apt_repository:
+      repo: "ppa:ubuntu-lxc/lxd-stable"
+      update_cache: yes
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'zesty'
+
+- name: apt-get update && apt-get upgrade
+  apt:
+    force_apt_get: true
+    update_cache: yes
+    upgrade: yes
+
+- name: install latest verison of lxd package
+  apt:
+    name: lxd
+    state: latest
+
+- name: add management user to lxd group
+  user:
+    name: "{{ management_user }}"
+    append: yes
+    group: lxd
+
+# see http://manpages.ubuntu.com/manpages/xenial/man1/lxd.1.html
+- name: initialize lxd
+  shell: lxd init --auto
+
+- name: set lxd https address
+# $ lxc config set core.https_address :8443
+  shell: "lxc config set core.https_address :8443"
+
+- name: set lxd trust password
+# $ lxc config set core.trust_password some-password
+  shell: "lxc config set core.trust_password {{ lxd_trust_password }}"
+
+- name: adjust ufw configuration
+  ufw:
+    rule: allow
+    src: "{{ item }}"
+    direction: in
+    port: 8443
+  with_items: "{{ lxd_src }}"
+
+- name: download images
+# $ lxc image copy images:ubuntu/xenial/amd64 local: --alias=ubuntu
+  shell: "lxc image copy {{ item.name }} local: --alias={{ item.alias }}"
+  with_items: "{{ lxd_images }}"
+
+- name: delete existing lxd networks
+  shell: "if [ \"{{ item.host }}\" == \"{{ host_name }}\" -a \"$(lxc network list | grep {{ item.name }})\" ]; then lxc network delete {{ item.name }}; fi"
+  ignore_errors: yes
+  with_items: "{{ lxd_networks }}"
+  when: refresh_networks
+
+# see https://insights.ubuntu.com/2017/02/14/network-management-with-lxd-2-3/
+- name: create lxd networks
+  shell: "if [ \"{{ item.host }}\" == \"{{ host_name }}\" -a ! \"$(lxc network list | grep {{ item.name }})\" ]; then lxc network create {{ item.name }} ipv4.address={{ item.net4 }} ipv4.nat={{ item.nat4 }} ipv4.dhcp.ranges={{ item.net4_dhcp }} ipv6.address={{ item.net6 }} ipv6.nat={{ item.nat6 }} ipv6.dhcp.ranges={{ item.net6_dhcp }}; fi"
+  with_items: "{{ lxd_networks }}"
+
+- name: create initial route script in /etc/network/if-up.d
+  copy:
+    content: "#!/bin/sh\n# created by ansible - don't modify\n"
+    dest: /etc/network/if-up.d/lxd-routes
+    owner: root
+    group: root
+    mode: 0755
+
+- name: add static routes for non-local lxd containers to lxd hosts
+# $ sudo vi /etc/network/interfaces
+# -> add this line:
+#   up route add -net 10.205.0.0/24 gw 192.168.1.50 dev eth0
+# $ sudo ifdown eth0 && sudo ifup eth0
+# $ route -n
+  lineinfile:
+    dest: /etc/network/if-up.d/lxd-routes
+    line: "if [ ! \"$(ip route list exact {{ item.net }})\" ]; then route add -net {{ item.net }} gw {{ item.ip }}; fi"
+  when: item.ip != inventory_hostname
+  with_items: "{{ lxd_hosts }}"
+
+- name: restart networking
+  service: name=networking state=restarted

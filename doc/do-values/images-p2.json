@@ -1,0 +1,263 @@
+{
+  "images": [
+    {
+      "id": 27663881,
+      "name": "16.04.3 x64",
+      "distribution": "Ubuntu",
+      "slug": "ubuntu-16-04-x64",
+      "public": true,
+      "regions": [
+        "nyc1",
+        "sfo1",
+        "nyc2",
+        "ams2",
+        "sgp1",
+        "lon1",
+        "nyc3",
+        "ams3",
+        "fra1",
+        "tor1",
+        "sfo2",
+        "blr1"
+      ],
+      "created_at": "2017-09-08T14:33:39Z",
+      "min_disk_size": 20,
+      "type": "snapshot",
+      "size_gigabytes": 0.35
+    },
+    {
+      "id": 27663903,
+      "name": "17.04 x32",
+      "distribution": "Ubuntu",
+      "slug": "ubuntu-17-04-x32",
+      "public": true,
+      "regions": [
+        "nyc1",
+        "sfo1",
+        "nyc2",
+        "ams2",
+        "sgp1",
+        "lon1",
+        "nyc3",
+        "ams3",
+        "fra1",
+        "tor1",
+        "sfo2",
+        "blr1"
+      ],
+      "created_at": "2017-09-08T14:37:35Z",
+      "min_disk_size": 20,
+      "type": "snapshot",
+      "size_gigabytes": 0.3
+    },
+    {
+      "id": 27664189,
+      "name": "17.04 x64",
+      "distribution": "Ubuntu",
+      "slug": "ubuntu-17-04-x64",
+      "public": true,
+      "regions": [
+        "nyc1",
+        "sfo1",
+        "nyc2",
+        "ams2",
+        "sgp1",
+        "lon1",
+        "nyc3",
+        "ams3",
+        "fra1",
+        "tor1",
+        "sfo2",
+        "blr1"
+      ],
+      "created_at": "2017-09-08T15:30:48Z",
+      "min_disk_size": 20,
+      "type": "snapshot",
+      "size_gigabytes": 0.36
+    },
+    {
+      "id": 27983391,
+      "name": "1465.8.0 (stable)",
+      "distribution": "CoreOS",
+      "slug": "coreos-stable",
+      "public": true,
+      "regions": [
+        "nyc1",
+        "sfo1",
+        "nyc2",
+        "ams2",
+        "sgp1",
+        "lon1",
+        "nyc3",
+        "ams3",
+        "fra1",
+        "tor1",
+        "sfo2",
+        "blr1"
+      ],
+      "created_at": "2017-09-21T15:21:22Z",
+      "min_disk_size": 20,
+      "type": "snapshot",
+      "size_gigabytes": 0.34
+    },
+    {
+      "id": 28108256,
+      "name": "7.4.1708 x64",
+      "distribution": "CentOS",
+      "slug": "centos-7-x64",
+      "public": true,
+      "regions": [
+        "nyc1",
+        "sfo1",
+        "nyc2",
+        "ams2",
+        "sgp1",
+        "lon1",
+        "nyc3",
+        "ams3",
+        "fra1",
+        "tor1",
+        "sfo2",
+        "blr1"
+      ],
+      "created_at": "2017-09-26T18:36:06Z",
+      "min_disk_size": 20,
+      "type": "snapshot",
+      "size_gigabytes": 0.38
+    },
+    {
+      "id": 28132324,
+      "name": "1548.0.0 (alpha)",
+      "distribution": "CoreOS",
+      "slug": "coreos-alpha",
+      "public": true,
+      "regions": [
+        "nyc1",
+        "sfo1",
+        "nyc2",
+        "ams2",
+        "sgp1",
+        "lon1",
+        "nyc3",
+        "ams3",
+        "fra1",
+        "tor1",
+        "sfo2",
+        "blr1"
+      ],
+      "created_at": "2017-09-27T16:01:39Z",
+      "min_disk_size": 20,
+      "type": "snapshot",
+      "size_gigabytes": 0.38
+    },
+    {
+      "id": 28158115,
+      "name": "7.11 x64",
+      "distribution": "Debian",
+      "slug": "debian-7-x64",
+      "public": true,
+      "regions": [
+        "nyc1",
+        "sfo1",
+        "nyc2",
+        "ams2",
+        "sgp1",
+        "lon1",
+        "nyc3",
+        "ams3",
+        "fra1",
+        "tor1",
+        "sfo2",
+        "blr1"
+      ],
+      "created_at": "2017-09-28T18:24:33Z",
+      "min_disk_size": 20,
+      "type": "snapshot",
+      "size_gigabytes": 0.36
+    },
+    {
+      "id": 28158128,
+      "name": "7.11 x32",
+      "distribution": "Debian",
+      "slug": "debian-7-x32",
+      "public": true,
+      "regions": [
+        "nyc1",
+        "sfo1",
+        "nyc2",
+        "ams2",
+        "sgp1",
+        "lon1",
+        "nyc3",
+        "ams3",
+        "fra1",
+        "tor1",
+        "sfo2",
+        "blr1"
+      ],
+      "created_at": "2017-09-28T18:26:34Z",
+      "min_disk_size": 20,
+      "type": "snapshot",
+      "size_gigabytes": 0.36
+    },
+    {
+      "id": 28282122,
+      "name": "10.4 x64 ZFS",
+      "distribution": "FreeBSD",
+      "slug": "freebsd-10-4-x64-zfs",
+      "public": true,
+      "regions": [
+        "nyc1",
+        "sfo1",
+        "nyc2",
+        "ams2",
+        "sgp1",
+        "lon1",
+        "nyc3",
+        "ams3",
+        "fra1",
+        "tor1",
+        "sfo2",
+        "blr1"
+      ],
+      "created_at": "2017-10-03T18:24:11Z",
+      "min_disk_size": 20,
+      "type": "snapshot",
+      "size_gigabytes": 0.75
+    },
+    {
+      "id": 28282143,
+      "name": "10.4 x64",
+      "distribution": "FreeBSD",
+      "slug": "freebsd-10-4-x64",
+      "public": true,
+      "regions": [
+        "nyc1",
+        "sfo1",
+        "nyc2",
+        "ams2",
+        "sgp1",
+        "lon1",
+        "nyc3",
+        "ams3",
+        "fra1",
+        "tor1",
+        "sfo2",
+        "blr1"
+      ],
+      "created_at": "2017-10-03T18:27:29Z",
+      "min_disk_size": 20,
+      "type": "snapshot",
+      "size_gigabytes": 0.72
+    }
+  ],
+  "links": {
+    "pages": {
+      "first": "https://api.digitalocean.com/v2/images?page=1&type=distribution",
+      "prev": "https://api.digitalocean.com/v2/images?page=1&type=distribution"
+    }
+  },
+  "meta": {
+    "total": 30
+  }
+}

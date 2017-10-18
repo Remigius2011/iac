@@ -1,0 +1,5 @@
+# tasks for role swarm - include swarm creation tasks if a swarm config is available
+---
+- name: include swarm configuration
+  include_tasks: create-swarm.yml
+  when: swarm_config is defined

@@ -1,0 +1,131 @@
+
+# variables for lxd hosts and their containers
+
+# general environment
+
+var_files:
+- ../ansible-local-vars.yml
+
+
+# settings for lxd configuration
+
+# set this variable to true if you want to refresh (i.e. delete and recreate) all lxd networks
+refresh_networks: true
+
+# todo (mandatory)
+# list the hosts and networks from which you want to have lxd remote access to your lxd hosts here
+# (typically your entire local network and/or the management host), e.g.
+# lxd_src:
+# - <network-ip>/<bits>
+# - <host-ip>/32
+# warning: if you leave this list empty, you won't have any ufw rules that allow inbound lxd remote access!
+lxd_src:
+
+# for private network ranges see https://en.wikipedia.org/wiki/Private_network
+
+# todo (mandatory)
+# a list of the lxd hosts and their IP addresses to add them as lxd remotes to the management hosts, e.g.
+# lxd_hosts:
+# - { name: "host01", ip: "nn.nn.nn.nn", net: "mm.mm.mm.mm/bb" }
+
+lxd_hosts:
+
+# todo (mandatory)
+# a list of lxd networks
+# for each lxd host, you must have a network to which the lxd containers are connected.
+# currently, only nat configurations have been tested. this loks e.g. as follows:
+# lxd_networks:
+# - { host: "host01", name: "lxdbr0", net4: "nn.nn.nn.nn/24", net4_dhcp: "nn.nn.nn.nn-mm.mm.mm.mm", nat4: "true", net6: "xxxx:xxxx:xxxx:xxxx::1/64", net6_dhcp: "xxxx:xxxx:xxxx:xxxx::f000-xxxx:xxxx:xxxx:xxxx::fffd", nat6: "true", refresh: false }
+# the following parameters are used:
+# host: the host name on which the network is to be created
+# name: the name of the network (unique within a host)
+# net4: ipv4 network as <network>/<bits> (for natted networks, this should be outside your local network)
+# net4_dhcp: ipv4 dhcp range for the lxd containers (should be inside the network net4, but outside the range of IP
+#            addresses statically assigned to containers in terraform)
+# nat4: whether to enable nat for ipv4 - should be set to true
+# net6: the ipv6 network as <network>/<bits>
+# net6_dhcp: ipv6 dhcp range for the lxd containers (should be inside the network net6, but outside the range of IP
+#            addresses statically assigned to containers in terraform)
+# nat6: whether to enable nat for ipv6 - should be set to true
+# refresh: whether to refresh the network in the ansible script (normally false, unless you want to force a refresh)
+
+lxd_networks:
+
+
+# settings for docker configuration
+
+# parameters for ufw rules for docker communication
+
+# todo (mandatory)
+# add source networks that should access internal docker ports here, e.g.
+# docker_src:
+# - <network-ip>/<bits>
+# - <host-ip>/32
+
+docker_src:
+
+# todo
+# add source networks that should access published docker ports here or leave this setting to use the same as docker_src:
+
+docker_service_src: "{{ docker_src }}"
+
+# todo
+# adjust the ports on which public services are made available
+
+docker_service_ports:
+- 80
+- 8080:8099
+
+# todo (mandatory)
+# add a map of hosts and their public IP addresses here
+# public_ip_map:
+#   <hostname1>: <ip1>
+#   <hostname2>: <ip2>
+
+public_ip_map:
+
+# todo
+# add a map of swarm parameters here, e.g.
+# swarm_config:
+#  <host1>:
+#    manager: true
+#  <host2>:
+#    manager: true
+#    join: <host1>
+#  <host3>:
+#    join: <host1>
+# which gives a swarm of host1 as first manager, host2 as manager that joins host1 and host3 that joins the swarm as worker.
+# for dedicated managers add dedicated: true to the managers.
+
+swarm_config:
+
+# todo
+# add configuration of some docker containers, e.g.
+#docker_containers:
+#  <host1>: [
+#    { name: c01, parameters: "-p 8080:8080", image: descom/iac-webapp },
+#    { name: c02, parameters: "-p 8081:8080", image: descom/iac-webapp }
+#  ]
+# parameters:
+# name (mandatory): the name of the container
+# parameters (optional): parameters passed 1:1 to docker run
+# image (mandatory): the image from which the container is created
+# see also ansible/roles/spinup/tasks/containers.yml
+
+docker_containers:
+
+# todo
+# add configuration of some swarm services, e.g.
+#swarm_services:
+#  dcch0021: [
+#    { name: s01, parameters: "-p 8082:8080", image: descom/iac-webapp },
+#    { name: s02, replicas: 4, parameters: "-p 8082:8080", image: descom/iac-webapp }
+#  ]
+# parameters:
+# name (mandatory): the name of the container
+# replicas (optional): number of replicas
+# parameters (optional): parameters passed 1:1 to docker service create
+# image (mandatory): the image from which the service is created
+# see also ansible/roles/spinup/tasks/services.yml
+
+swarm_services:

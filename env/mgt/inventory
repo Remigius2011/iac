@@ -1,0 +1,14 @@
+# currently, only one management host is supported (public keys for management user)
+
+[management-hosts]
+
+# todo (mandatory)
+# if you set-up the management host remotely or via ssh, use the following host definition
+# (replace nn.nn.nn.nn by the management host's ip and <mgt-host> by its host name)
+
+#nn.nn.nn.nn host_name=<mgt-host>
+
+# if you set-up the management host locally, use the following host definition:
+
+# todo (mandatory - alternative to above)
+#localhost ansible_connection=local

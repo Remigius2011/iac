@@ -1,0 +1,12 @@
+# this include spins up docker containers
+---
+- name: get containers to start on host
+  set_fact:
+    containers: "{{ docker_containers[host_name] }}"
+  when: item.key == host_name
+  with_dict: "{{ docker_containers }}"
+
+- name: spin-up containers
+  shell: "if [ -z \"$(docker ps -aq -f \"name={{ item.name }}\")\" ]; then docker run -d --name {{ item.name }} {{ item.parameters|default(\"\") }} {{ item.image }}; fi"
+  with_items: "{{ containers }}"
+  when: containers is defined

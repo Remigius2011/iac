@@ -1,0 +1,16 @@
+---
+# default trust password - set a real one in ansible-vault
+# you really should not use this!
+lxd_trust_password: "secret"
+
+# key to prefetch to enable apt-key - should be the key of the lxd ppa
+# see https://launchpad.net/~ubuntu-lxc/+archive/ubuntu/lxd-stable
+prefetch_key: 93763AC528C8C52568951BE0D5495F657635B973
+
+download_binaries:
+- src: https://releases.hashicorp.com/terraform/0.10.7/terraform_0.10.7_linux_amd64.zip
+  file: terraform_0.10.7_linux_amd64.zip
+- src: https://github.com/sl1pm4t/terraform-provider-lxd/releases/download/v0.10.4/terraform-provider-lxd_v0.10.4_linux_amd64.tar.gz
+  file: terraform-provider-lxd_v0.10.4_linux_amd64.tar.gz
+- src: https://github.com/digitalocean/doctl/releases/download/v1.7.0/doctl-1.7.0-linux-amd64.tar.gz
+  file: doctl-1.7.0-linux-amd64.tar.gz

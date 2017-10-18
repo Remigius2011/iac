@@ -1,0 +1,52 @@
+# tasks for role docker
+---
+- name: install docker ubuntu
+  include_tasks: docker-ubuntu.yml
+  when: docker_upstream is undefined or not docker_upstream
+
+- name: install docker upstream
+  include_tasks: docker-upstream.yml
+  when: docker_upstream is defined and docker_upstream
+
+- name: create directory /etc/systemd/system/docker.service.d
+  file: path=/etc/systemd/system/docker.service.d state=directory mode=0775
+  when: proxy_url is defined
+
+- name: set proxy config in /etc/systemd/system/docker.service.d/http-proxy.conf
+  template: src=http-proxy.conf dest=/etc/systemd/system/docker.service.d/http-proxy.conf mode=0644
+  register: docker_proxy
+  when: proxy_url is defined
+
+- name: restart docker daemon
+  systemd:
+    name: docker
+    daemon_reload: yes
+    state: restarted
+  when: docker_proxy.changed
+
+- name: add uwf rules for docker tcp traffic
+  ufw:
+    rule: allow
+    src: "{{ item }}"
+    direction: in
+    proto: tcp
+    port: "{{ docker_ports_tcp|join(',') }}"
+  with_items: "{{ docker_src }}"
+
+- name: add uwf rules for docker udp traffic
+  ufw:
+    rule: allow
+    src: "{{ item }}"
+    direction: in
+    proto: udp
+    port: "{{ docker_ports_udp|join(',') }}"
+  with_items: "{{ docker_src }}"
+
+- name: add uwf rules for externally accessible docker services (tcp only)
+  ufw:
+    rule: allow
+    src: "{{ item }}"
+    direction: in
+    proto: tcp
+    port: "{{ docker_service_ports|join(',') }}"
+  with_items: "{{ docker_service_src }}"
