@@ -5,7 +5,8 @@ infrastructure as code
 _provisioning docker hosts and containers using terraform, ansible and lxd on metal and in the cloud_
 
 this repo accompanies my talk held at [BaselOne17](http://baselone.ch/), which is
-also available on [slideshare](https://www.slideshare.net/remigius-stalder/iac-baselone17).
+also available on slideshare in [english](https://www.slideshare.net/remigius-stalder/iac-baselone17en)
+and [german](https://www.slideshare.net/remigius-stalder/iac-baselone17).
 of course, you can also use the content of it if you have missed the conference.
 
 **disclaimer:** you use the content of this repo at your sole and only risk - 
